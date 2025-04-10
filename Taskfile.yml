@@ -1,0 +1,33 @@
+version: '3'
+
+dotenv:
+  - .env
+
+tasks:
+  run:
+    dir: cmd
+    cmds:
+      - go run .
+
+  tenant-migration:
+    desc: "Create a new tenant migration Ej: task tenant-migration -- [migration_name]"
+    dir: src/database/postgres/migrations/tenants
+    cmds:
+      - goose create {{.CLI_ARGS}} sql
+
+  admin-migration:
+    desc: "Create a new admin migration Ej: task admin-migration -- [migration_name]"
+    dir: src/database/postgres/migrations/admin
+    cmds:
+      - goose create {{.CLI_ARGS}} sql
+
+  common-migration:
+    desc: "Create a new common migration Ej: task common-migration -- [migration_name]"
+    dir: src/database/postgres/migrations/common
+    cmds:
+      - goose create {{.CLI_ARGS}} sql
+
+  generate-cert:
+    desc: "Generate JWT certificate"
+    cmds:
+      - ./cert.sh
