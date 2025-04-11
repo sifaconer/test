@@ -78,7 +78,7 @@ func (r *Rest) Run() {
 		// os.Exit(1) // No detener la aplicación si falla un tenant, priorizar el inicio de la API
 	}
 	admin.Register()
-	api.NewCarritoCompraAPI(r.log, app, r.tenant).Register()
+	api.NewCarritoCompraAPI(r.log, app, r.conf, r.tenant).Register()
 
 	r.log.Info(context.Background(), "Rest API started")
 	host := net.JoinHostPort("0.0.0.0", fmt.Sprintf("%d", r.conf.Port))

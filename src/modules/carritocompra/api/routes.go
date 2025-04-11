@@ -15,7 +15,7 @@ type CarritoCompraRoutes interface {
 type carritoCompraRoutes struct {
 	log      common.Logger
 	uc       usecase.CarritoCompra
-	handlers handlers.CarritoCompraHandler
+	handlers *handlers.CarritoCompraHandler
 	app      *fiber.App
 }
 

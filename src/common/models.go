@@ -25,6 +25,10 @@ type QueryParams struct {
 	Size   int    `json:"size,omitempty"`
 }
 
+func (qp *QueryParams) String() string {
+	return ""
+}
+
 type APIError struct {
 	Field   string `json:"field,omitempty,omitzero"`
 	Message string `json:"message"`

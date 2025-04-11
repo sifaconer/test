@@ -9,13 +9,13 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-type carritoCompraHandler struct {
+type CarritoCompraHandler struct {
 	log common.Logger
 	uc  usecase.CarritoCompra
 }
 
 // Create implements CarritoCompraHandler.
-func (cc *carritoCompraHandler) Create(c *fiber.Ctx) error {
+func (cc *CarritoCompraHandler) Create(c *fiber.Ctx) error {
 	// Decode
 	dto := domain.DTOCarritoCompra{}
 	if err := c.BodyParser(&dto); err != nil {
@@ -41,7 +41,7 @@ func (cc *carritoCompraHandler) Create(c *fiber.Ctx) error {
 	}
 
 	// Use case
-	err := cc.uc.Create(common.Context(c), dto)
+	_, err := cc.uc.Create(common.Context(c), dto)
 	if err != nil {
 		return c.Status(fiber.StatusUnauthorized).JSON(common.Response[any]{
 			Status:  "error",
@@ -64,7 +64,7 @@ func (cc *carritoCompraHandler) Create(c *fiber.Ctx) error {
 }
 
 // Delete implements CarritoCompraHandler.
-func (cc *carritoCompraHandler) Delete(c *fiber.Ctx) error {
+func (cc *CarritoCompraHandler) Delete(c *fiber.Ctx) error {
 	// Decode
 	id, err := strconv.ParseInt(c.Params("id"), 10, 64)
 	if err != nil {
@@ -114,7 +114,7 @@ func (cc *carritoCompraHandler) Delete(c *fiber.Ctx) error {
 }
 
 // Get implements CarritoCompraHandler.
-func (cc *carritoCompraHandler) Get(c *fiber.Ctx) error {
+func (cc *CarritoCompraHandler) Get(c *fiber.Ctx) error {
 	// Decode
 	id, err := strconv.ParseInt(c.Params("id"), 10, 64)
 	if err != nil {
@@ -131,7 +131,7 @@ func (cc *carritoCompraHandler) Get(c *fiber.Ctx) error {
 	}
 
 	// Use case
-	dto, err := cc.uc.Get(common.Context(c), id)
+	dto, err := cc.uc.GetById(common.Context(c), id)
 	if err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(common.Response[any]{
 			Status:  "error",
@@ -155,7 +155,7 @@ func (cc *carritoCompraHandler) Get(c *fiber.Ctx) error {
 }
 
 // List implements CarritoCompraHandler.
-func (cc *carritoCompraHandler) List(c *fiber.Ctx) error {
+func (cc *CarritoCompraHandler) List(c *fiber.Ctx) error {
 	// Decode
 	filters := common.QueryParams{}
 	if err := c.QueryParser(&filters); err != nil {
@@ -171,7 +171,7 @@ func (cc *carritoCompraHandler) List(c *fiber.Ctx) error {
 		})
 	}
 	// Use case
-	dtos, err := cc.uc.List(common.Context(c), filters)
+	dtos, err := cc.uc.Search(common.Context(c), nil) // TODO: Handle filters
 	if err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(common.Response[any]{
 			Status:  "error",
@@ -195,7 +195,7 @@ func (cc *carritoCompraHandler) List(c *fiber.Ctx) error {
 }
 
 // Update implements CarritoCompraHandler.
-func (cc *carritoCompraHandler) Update(c *fiber.Ctx) error {
+func (cc *CarritoCompraHandler) Update(c *fiber.Ctx) error {
 	// Decode
 	dto := domain.DTOCarritoCompra{}
 	if err := c.BodyParser(&dto); err != nil {
@@ -227,7 +227,7 @@ func (cc *carritoCompraHandler) Update(c *fiber.Ctx) error {
 	}
 
 	// Use case
-	err := cc.uc.Update(common.Context(c), dto)
+	_, err := cc.uc.Update(common.Context(c), dto.ID, dto)
 	if err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(common.Response[any]{
 			Status:     "error",
@@ -252,8 +252,8 @@ func (cc *carritoCompraHandler) Update(c *fiber.Ctx) error {
 	})
 }
 
-func NewCarritoCompraHandler(log common.Logger, uc usecase.CarritoCompra) CarritoCompraHandler {
-	return &carritoCompraHandler{
+func NewCarritoCompraHandler(log common.Logger, uc usecase.CarritoCompra) *CarritoCompraHandler {
+	return &CarritoCompraHandler{
 		log: log,
 		uc:  uc,
 	}
