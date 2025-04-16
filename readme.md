@@ -7,10 +7,6 @@
 - Poner el https://golangci-lint.run/
 
 
-
-- Preguntar por los dtos si debo crear para entrada y response y como manejo eso en el generico
-
-
 ## Braille ASCII Art
 
 > https://lachlanarthur.github.io/Braille-ASCII-Art/
