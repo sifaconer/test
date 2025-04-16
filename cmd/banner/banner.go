@@ -26,8 +26,8 @@ type APIInfo struct {
 func Banner(config *config.Config) {
 	apiInfo := APIInfo{
 		Name:        "KOSVI",
-		Author:      "Kosvi Team",
-		Description: "API REST Kosvi",
+		Author:      "KOSVI Team",
+		Description: "API REST KOSVI",
 		StartedAt:   time.Now(),
 		GitRepo:     "github.com/kosvi/kosvi",
 		Environment: config.Environment.Name,

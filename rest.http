@@ -1,0 +1,62 @@
+@token=eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiODRjN2MzZjAtZjk3Zi00ZmJlLTkwNmItYjE2YzQ5NTBhNmViIiwidGVuYW50cyI6WyJjM2VjYzIyMy00Y2RiLTRjNzQtODliZS01MjdjZWI0MWI5N2MiXSwidHlwZSI6ImFjY2VzcyIsImlzcyI6IktPU1ZJIiwic3ViIjoiODRjN2MzZjAtZjk3Zi00ZmJlLTkwNmItYjE2YzQ5NTBhNmViIiwiZXhwIjoxNzQ0Nzc0NTI2LCJuYmYiOjE3NDQ3NzA5MjYsImlhdCI6MTc0NDc3MDkyNn0.ASnvdf0IWh6GUOGB2q95-uZWXCqLXysarIkWS3mwVVm111ZHxgRRPS2SY8IMLV4GkaFXtGRIqyrq3XI_eEkVtA
+@refresh_token=eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiODRjN2MzZjAtZjk3Zi00ZmJlLTkwNmItYjE2YzQ5NTBhNmViIiwidHlwZSI6InJlZnJlc2giLCJpc3MiOiJLT1NWSSIsInN1YiI6Ijg0YzdjM2YwLWY5N2YtNGZiZS05MDZiLWIxNmM0OTUwYTZlYiIsImV4cCI6MTc0NDI2MDQyNywibmJmIjoxNzQ0MjUzMjI3LCJpYXQiOjE3NDQyNTMyMjd9.a7H4Yl0Fro60zqrU-lD1gJfrpMbKjbFmM3Ch_TQ-9OZM5D2QQt4dXj-72u0xFW6ArksJNd-LRBLrStbZH1XKZw
+@tenant=c3ecc223-4cdb-4c74-89be-527ceb41b97c
+
+### Register
+POST http://localhost:8080/api/v1/register
+content-type: application/json
+
+{
+    "name": "test 1",
+    "email": "test1@test.com",
+    "password": "test1"
+}
+
+### Login
+POST http://localhost:8080/api/v1/login
+content-type: application/json
+
+{
+    "email": "test@test.com",
+    "password": "test"
+}
+
+### Register tenant
+POST http://localhost:8080/api/v1/tenant
+Authorization: {{token}}
+content-type: application/json
+
+{
+    "name": "test 1"
+}
+
+### Refresh
+POST http://localhost:8080/api/v1/refresh
+content-type: application/json
+Authorization: {{token}}
+
+{
+    "token": "{{token}}",
+    "refresh_token": "{{refresh_token}}"
+}
+
+### Get Tenant
+GET http://localhost:8080/api/v1/tenants
+Authorization: {{token}}
+
+### Productos
+### Get Productos
+GET http://localhost:8080/api/v1/productos?fields=data{id,precio}
+Authorization: {{token}}
+X-Tenant-Id: {{tenant}}
+
+### Create Productos
+POST http://localhost:8080/api/v1/productos
+Authorization: {{token}}
+X-Tenant-Id: {{tenant}}
+content-type: application/json
+
+{
+    "nombre": "Jugo de Natura",
+    "precio": 10000
+}

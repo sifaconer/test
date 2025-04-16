@@ -16,7 +16,7 @@ type carritoCompraRoutes struct {
 	log      common.Logger
 	uc       usecase.CarritoCompra
 	handlers *handlers.CarritoCompraHandler
-	app      *fiber.App
+	app      fiber.Router
 }
 
 func (c *carritoCompraRoutes) RegisterRoutes() {
@@ -27,7 +27,7 @@ func (c *carritoCompraRoutes) RegisterRoutes() {
 	c.app.Delete("/carrito-compra/:id", c.handlers.Delete)
 }
 
-func NewCarritoCompraRoutes(log common.Logger, app *fiber.App, uc usecase.CarritoCompra) CarritoCompraRoutes {
+func NewCarritoCompraRoutes(log common.Logger, app fiber.Router, uc usecase.CarritoCompra) CarritoCompraRoutes {
 	return &carritoCompraRoutes{
 		log:      log,
 		uc:       uc,

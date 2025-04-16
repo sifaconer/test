@@ -28,7 +28,7 @@ func (r *Rest) RequestLimitMiddleware() fiber.Handler {
 // CORS
 func (r *Rest) CORSMiddleware() fiber.Handler {
 	return cors.New(cors.Config{
-		AllowOrigins: "*",
+		AllowOrigins: "*", // TODO: Cambiar a lista de dominios
 		AllowHeaders: "Origin, Content-Type, Accept, Authorization, X-Tenant-ID",
 		AllowMethods: "GET, POST, PUT, DELETE, OPTIONS",
 	})

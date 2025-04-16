@@ -13,7 +13,7 @@ import (
 
 type AdminAPI struct {
 	log    common.Logger
-	app    *fiber.App
+	app    fiber.Router
 	routes AdminRoutes
 	config *config.Config
 	tenant *common.TenantConnectionManager
@@ -30,7 +30,7 @@ func (t *AdminAPI) RegisterAllTenants(ctx context.Context) error {
 
 func NewAdminAPI(
 	log common.Logger,
-	app *fiber.App,
+	app fiber.Router,
 	config *config.Config,
 	tenant *common.TenantConnectionManager,
 	migrations usecase.TenantMigrations,

@@ -12,13 +12,13 @@ import (
 type CarritoCompraAPI struct {
 	log    common.Logger
 	config *config.Config
-	app    *fiber.App
+	app    fiber.Router
 	uc     usecase.CarritoCompra
 	routes CarritoCompraRoutes
 	tenant *common.TenantConnectionManager
 }
 
-func NewCarritoCompraAPI(log common.Logger, app *fiber.App, config *config.Config, tenant *common.TenantConnectionManager) *CarritoCompraAPI {
+func NewCarritoCompraAPI(log common.Logger, app fiber.Router, config *config.Config, tenant *common.TenantConnectionManager) *CarritoCompraAPI {
 	repo := common.NewRepository[domain.TableCarritoCompra, int64](config, log, tenant)
 	uc := usecase.NewCarritoCompra(config, log, tenant, repo)
 	routes := NewCarritoCompraRoutes(log, app, uc)

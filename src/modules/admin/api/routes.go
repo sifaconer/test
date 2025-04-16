@@ -18,7 +18,7 @@ type adminRoutes struct {
 	ucTenant       usecase.Tenant
 	ucAuth         usecase.Auth
 	config         *config.Config
-	app            *fiber.App
+	app            fiber.Router
 	tenantHandlers handlers.TenantHandler
 	authHandlers   handlers.AuthHandler
 }
@@ -39,7 +39,7 @@ func (t *adminRoutes) RegisterRoutes() {
 	t.app.Delete("/tenants/:id", t.tenantHandlers.Delete)
 }
 
-func NewAdminRoutes(log common.Logger, app *fiber.App, ucTenant usecase.Tenant, ucAuth usecase.Auth, config *config.Config) AdminRoutes {
+func NewAdminRoutes(log common.Logger, app fiber.Router, ucTenant usecase.Tenant, ucAuth usecase.Auth, config *config.Config) AdminRoutes {
 	return &adminRoutes{
 		log:            log,
 		ucTenant:       ucTenant,

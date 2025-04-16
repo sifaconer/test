@@ -6,7 +6,8 @@ import (
 	"api-test/src/database/postgres"
 	adminAPI "api-test/src/modules/admin/api"
 	"api-test/src/modules/admin/usecase"
-	"api-test/src/modules/carritocompra/api"
+	apiCarrito "api-test/src/modules/carritocompra/api"
+	apiProductos "api-test/src/modules/productos/api"
 	"context"
 	"fmt"
 	"net"
@@ -42,10 +43,10 @@ func NewRest(
 		psql:       psql,
 		migrations: migrations,
 		EXCLUDE_PATHS: []string{
-			"/login",
-			"/register",
-			"/logout",
-			"/refresh",
+			"/api/v1/login",
+			"/api/v1/register",
+			"/api/v1/logout",
+			"/api/v1/refresh",
 		},
 	}
 }
@@ -72,13 +73,21 @@ func (r *Rest) Run() {
 	// app.Use(r.AuthorizationMiddleware()) // TODO: pendiente definir método de manejo de permisos
 	// app.Use(r.FilterMiddleware()) // TODO: pendiente definir método de manejo de filtros que llegan a sql para consultas dinámicas
 
-	admin := adminAPI.NewAdminAPI(r.log, app, r.conf, r.tenant, r.migrations, r.psql)
+	// prefix /api
+	apiGroup := app.Group("/api/v1")
+
+	// admin
+	admin := adminAPI.NewAdminAPI(r.log, apiGroup, r.conf, r.tenant, r.migrations, r.psql)
 	if err := admin.RegisterAllTenants(context.Background()); err != nil {
 		r.log.Error(context.Background(), "Error registering all tenants", "error", err)
-		// os.Exit(1) // No detener la aplicación si falla un tenant, priorizar el inicio de la API
 	}
 	admin.Register()
-	api.NewCarritoCompraAPI(r.log, app, r.conf, r.tenant).Register()
+
+	// carritocompra
+	apiCarrito.NewCarritoCompraAPI(r.log, apiGroup, r.conf, r.tenant).Register()
+
+	// productos
+	apiProductos.NewProductosAPI(r.log, apiGroup, r.conf, r.tenant).Register()
 
 	r.log.Info(context.Background(), "Rest API started")
 	host := net.JoinHostPort("0.0.0.0", fmt.Sprintf("%d", r.conf.Port))

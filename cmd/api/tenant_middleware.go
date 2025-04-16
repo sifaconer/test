@@ -16,12 +16,12 @@ func (r *Rest) TenantMiddleware() fiber.Handler {
 		if slices.Contains(r.EXCLUDE_PATHS, c.Path()) {
 			return c.Next()
 		}
-		// Excluir la ruta del POST para /tenants
-		if c.Method() == "POST" && c.Path() == "/tenants" {
+		// // Excluir la ruta del POST para /tenants
+		if c.Method() == "POST" && c.Path() == "/api/v1/tenants" {
 			return c.Next()
 		}
 		// Excluir la ruta del GET para /tenants
-		if c.Method() == "GET" && c.Path() == "/tenants" {
+		if c.Method() == "GET" && c.Path() == "/api/v1/tenants" {
 			return c.Next()
 		}
 
