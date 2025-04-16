@@ -8,13 +8,13 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-type tenantHandler struct {
+type TenantHandler struct {
 	log common.Logger
 	uc  usecase.Tenant
 }
 
 // Create implements TenantHandler.
-func (t *tenantHandler) Create(c *fiber.Ctx) error {
+func (t *TenantHandler) Create(c *fiber.Ctx) error {
 	// Decode
 	dto := domain.DTOTenant{}
 	if err := c.BodyParser(&dto); err != nil {
@@ -61,18 +61,8 @@ func (t *tenantHandler) Create(c *fiber.Ctx) error {
 	})
 }
 
-// Delete implements TenantHandler.
-func (t *tenantHandler) Delete(c *fiber.Ctx) error {
-	panic("unimplemented")
-}
-
-// Get implements TenantHandler.
-func (t *tenantHandler) Get(c *fiber.Ctx) error {
-	panic("unimplemented")
-}
-
 // List implements TenantHandler.
-func (t *tenantHandler) List(c *fiber.Ctx) error {
+func (t *TenantHandler) List(c *fiber.Ctx) error {
 	// Use case
 	tenants, err := t.uc.ListTenants(common.Context(c))
 	if err != nil {
@@ -95,16 +85,9 @@ func (t *tenantHandler) List(c *fiber.Ctx) error {
 	})
 }
 
-// Update implements TenantHandler.
-func (t *tenantHandler) Update(c *fiber.Ctx) error {
-	panic("unimplemented")
-}
-
-func NewTenantHandler(log common.Logger, uc usecase.Tenant) *tenantHandler {
-	return &tenantHandler{
+func NewTenantHandler(log common.Logger, uc usecase.Tenant) *TenantHandler {
+	return &TenantHandler{
 		log: log,
 		uc:  uc,
 	}
 }
-
-var _ TenantHandler = (*tenantHandler)(nil)

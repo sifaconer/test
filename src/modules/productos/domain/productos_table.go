@@ -10,15 +10,15 @@ type ProductosTable struct {
 	Precio        float64    `bun:"precio,notnull"`
 }
 
-func (p *ProductosTable) ToDTO() *ProductosDTO {
-	return &ProductosDTO{
+func (p *ProductosTable) ToDTO() ProductosDTO {
+	return ProductosDTO{
 		Id:   p.ID,
 		Nombre: p.Nombre,
 		Precio: p.Precio,
 	}
 }
 
-func (p *ProductosTable) FromDTO(dto *ProductosDTO) {
+func (p *ProductosTable) FromDTO(dto ProductosDTO) {
 	p.ID = dto.Id
 	p.Nombre = dto.Nombre
 	p.Precio = dto.Precio

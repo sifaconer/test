@@ -45,7 +45,7 @@ func NewAdminAPI(
 		log:    log,
 		app:    app,
 		ucTenant: ucTenant,
-		routes: NewAdminRoutes(log, app, ucTenant, ucAuth, config),
+		routes: NewAdminRoutes(log, app, ucTenant, migrations, ucAuth, config),
 		tenant: tenant,
 	}
 }

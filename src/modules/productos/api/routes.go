@@ -20,8 +20,8 @@ type productosRoutes struct {
 }
 
 func (r *productosRoutes) RegisterRoutes() {
-	r.app.Get("/productos", r.handlers.GetAll)
-	r.app.Get("/productos/:id", r.handlers.GetById)
+	r.app.Get("/productos", r.handlers.Search)
+	r.app.Get("/productos/:id", r.handlers.Get)
 	r.app.Post("/productos", r.handlers.Create)
 	r.app.Put("/productos/:id", r.handlers.Update)
 	r.app.Delete("/productos/:id", r.handlers.Delete)

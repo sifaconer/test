@@ -19,14 +19,25 @@ type Pagination struct {
 type QueryParams struct {
 	Field  string `json:"field,omitempty,omitzero"`
 	Filter string `json:"filter,omitempty,omitzero"`
-	Order  string `json:"order,omitempty,omitzero"`
-	Search string `json:"search,omitempty,omitzero"`
-	Page   int    `json:"page,omitempty"`
+	Sort  string `json:"sort,omitempty,omitzero"`
+	Page   int    `json:"page,omitempty" validate:"min=1"`
 	Size   int    `json:"size,omitempty"`
 }
 
-func (qp *QueryParams) String() string {
-	return ""
+func (qp *QueryParams) Default() {
+	if qp == nil {
+		return
+	}
+	if qp.Page == 0 {
+		qp.Page = 1
+	}
+	if qp.Size == 0 {
+		qp.Size = 10
+	}
+}
+
+func (qp *QueryParams) IsEmpty() bool {
+	return qp == nil || qp.Field == "" && qp.Filter == "" && qp.Sort == "" && qp.Page == 0 && qp.Size == 0
 }
 
 type APIError struct {

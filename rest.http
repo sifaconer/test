@@ -1,5 +1,5 @@
-@token=eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiODRjN2MzZjAtZjk3Zi00ZmJlLTkwNmItYjE2YzQ5NTBhNmViIiwidGVuYW50cyI6WyJjM2VjYzIyMy00Y2RiLTRjNzQtODliZS01MjdjZWI0MWI5N2MiXSwidHlwZSI6ImFjY2VzcyIsImlzcyI6IktPU1ZJIiwic3ViIjoiODRjN2MzZjAtZjk3Zi00ZmJlLTkwNmItYjE2YzQ5NTBhNmViIiwiZXhwIjoxNzQ0Nzc0NTI2LCJuYmYiOjE3NDQ3NzA5MjYsImlhdCI6MTc0NDc3MDkyNn0.ASnvdf0IWh6GUOGB2q95-uZWXCqLXysarIkWS3mwVVm111ZHxgRRPS2SY8IMLV4GkaFXtGRIqyrq3XI_eEkVtA
-@refresh_token=eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiODRjN2MzZjAtZjk3Zi00ZmJlLTkwNmItYjE2YzQ5NTBhNmViIiwidHlwZSI6InJlZnJlc2giLCJpc3MiOiJLT1NWSSIsInN1YiI6Ijg0YzdjM2YwLWY5N2YtNGZiZS05MDZiLWIxNmM0OTUwYTZlYiIsImV4cCI6MTc0NDI2MDQyNywibmJmIjoxNzQ0MjUzMjI3LCJpYXQiOjE3NDQyNTMyMjd9.a7H4Yl0Fro60zqrU-lD1gJfrpMbKjbFmM3Ch_TQ-9OZM5D2QQt4dXj-72u0xFW6ArksJNd-LRBLrStbZH1XKZw
+@token=eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiODRjN2MzZjAtZjk3Zi00ZmJlLTkwNmItYjE2YzQ5NTBhNmViIiwidGVuYW50cyI6WyJjM2VjYzIyMy00Y2RiLTRjNzQtODliZS01MjdjZWI0MWI5N2MiXSwidHlwZSI6ImFjY2VzcyIsImlzcyI6IktPU1ZJIiwic3ViIjoiODRjN2MzZjAtZjk3Zi00ZmJlLTkwNmItYjE2YzQ5NTBhNmViIiwiZXhwIjoxNzQ0Nzg1NjY3LCJuYmYiOjE3NDQ3ODIwNjcsImlhdCI6MTc0NDc4MjA2N30.fJuXlVaDNhtyIwMrE3xQrDidahQoHyPkVxTrfc68xtMoSm8kKC1sWVZ3y9-sNmP-LFmOv83JspoK1a8PQ5-oXA
+@refresh_token=eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiODRjN2MzZjAtZjk3Zi00ZmJlLTkwNmItYjE2YzQ5NTBhNmViIiwidHlwZSI6InJlZnJlc2giLCJpc3MiOiJLT1NWSSIsInN1YiI6Ijg0YzdjM2YwLWY5N2YtNGZiZS05MDZiLWIxNmM0OTUwYTZlYiIsImV4cCI6MTc0NDc4OTI2NywibmJmIjoxNzQ0NzgyMDY3LCJpYXQiOjE3NDQ3ODIwNjd9.McuicJNXBYVEUocTS9hhu3Dy_cV1y5mIBa7QTcA68nXqP718OyiT-gVI7v8INN6IjnnsjbTqTxKEBMLI4vc5Tw
 @tenant=c3ecc223-4cdb-4c74-89be-527ceb41b97c
 
 ### Register
@@ -44,9 +44,18 @@ Authorization: {{token}}
 GET http://localhost:8080/api/v1/tenants
 Authorization: {{token}}
 
+### Run Admin Migrations
+POST http://localhost:8080/api/v1/migrations/admin
+Authorization: {{token}}
+
+### Run Tenant Migrations
+POST http://localhost:8080/api/v1/migrations/tenant
+Authorization: {{token}}
+X-Tenant-Id: {{tenant}}
+
 ### Productos
 ### Get Productos
-GET http://localhost:8080/api/v1/productos?fields=data{id,precio}
+GET http://localhost:8080/api/v1/productos?fields=data{id,precio}&page=1&size=3&filter={"AND":[{"id":{"gt":1}}]}&sort=[{"precio":{"dir":"desc"}}]
 Authorization: {{token}}
 X-Tenant-Id: {{tenant}}
 
@@ -57,6 +66,24 @@ X-Tenant-Id: {{tenant}}
 content-type: application/json
 
 {
-    "nombre": "Jugo de Natura",
-    "precio": 10000
+    "nombre": "Jugo de Natura 4",
+    "precio": 40000
+}
+
+### Get Carrito Compra
+GET http://localhost:8080/api/v1/carrito-compra
+Authorization: {{token}}
+X-Tenant-Id: {{tenant}}
+
+### Create Carrito Compra
+POST http://localhost:8080/api/v1/carrito-compra
+Authorization: {{token}}
+X-Tenant-Id: {{tenant}}
+content-type: application/json
+
+{
+    "producto_id": 1,
+    "cliente_id": 1,
+    "cantidad": 2,
+    "id": 1
 }

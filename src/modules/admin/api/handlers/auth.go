@@ -9,13 +9,13 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-type authHandler struct {
+type AuthHandler struct {
 	log    common.Logger
 	uc     usecase.Auth
 	config config.Config
 }
 
-func (a *authHandler) Login(c *fiber.Ctx) error {
+func (a *AuthHandler) Login(c *fiber.Ctx) error {
 	// Decode
 	dto := domain.DTOLogin{}
 	if err := c.BodyParser(&dto); err != nil {
@@ -66,7 +66,7 @@ func (a *authHandler) Login(c *fiber.Ctx) error {
 	})
 }
 
-func (a *authHandler) Register(c *fiber.Ctx) error {
+func (a *AuthHandler) Register(c *fiber.Ctx) error {
 	// Decode
 	dto := domain.DTORegister{}
 	if err := c.BodyParser(&dto); err != nil {
@@ -118,11 +118,11 @@ func (a *authHandler) Register(c *fiber.Ctx) error {
 	})
 }
 
-func (a *authHandler) Logout(c *fiber.Ctx) error {
+func (a *AuthHandler) Logout(c *fiber.Ctx) error {
 	return nil
 }
 
-func (a *authHandler) Refresh(c *fiber.Ctx) error {
+func (a *AuthHandler) Refresh(c *fiber.Ctx) error {
 	// Decode
 	dto := domain.DTOAuth{}
 	if err := c.BodyParser(&dto); err != nil {
@@ -171,21 +171,20 @@ func (a *authHandler) Refresh(c *fiber.Ctx) error {
 }
 
 // ForgotPassword maneja el olvido de la contraseña.
-func (a *authHandler) ForgotPassword(c *fiber.Ctx) error {
+func (a *AuthHandler) ForgotPassword(c *fiber.Ctx) error {
 	return nil
 }
 
 // ResetPassword maneja el cambio de la contraseña.
-func (a *authHandler) ResetPassword(c *fiber.Ctx) error {
+func (a *AuthHandler) ResetPassword(c *fiber.Ctx) error {
 	return nil
 }
 
-func NewAuthHandler(log common.Logger, config config.Config, uc usecase.Auth) *authHandler {
-	return &authHandler{
+func NewAuthHandler(log common.Logger, config config.Config, uc usecase.Auth) *AuthHandler {
+	return &AuthHandler{
 		log:    log,
 		config: config,
 		uc:     uc,
 	}
 }
 
-var _ AuthHandler = (*authHandler)(nil)

@@ -20,7 +20,7 @@ type carritoCompraRoutes struct {
 }
 
 func (c *carritoCompraRoutes) RegisterRoutes() {
-	c.app.Get("/carrito-compra", c.handlers.List)
+	c.app.Get("/carrito-compra", c.handlers.Search)
 	c.app.Post("/carrito-compra", c.handlers.Create)
 	c.app.Get("/carrito-compra/:id", c.handlers.Get)
 	c.app.Put("/carrito-compra/:id", c.handlers.Update)

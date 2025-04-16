@@ -9,6 +9,7 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/pressly/goose/v3"
+	"github.com/uptrace/bun"
 )
 
 type TenantMigrations interface {
@@ -30,7 +31,7 @@ type tenantMigrations struct {
 
 // RollbackAllMigrations implements TenantMigrations.
 func (t *tenantMigrations) RollbackAllMigrations(ctx context.Context, tenantID uuid.UUID) error {
-	db, err := t.tenantManager.GetDB(tenantID)
+db, err := t.getDB(ctx, tenantID)
 	if err != nil {
 		return err
 	}
@@ -45,7 +46,7 @@ func (t *tenantMigrations) RollbackAllMigrations(ctx context.Context, tenantID u
 
 // RollbackMigration implements TenantMigrations.
 func (t *tenantMigrations) RollbackMigration(ctx context.Context, tenantID uuid.UUID, migrationID int64) error {
-	db, err := t.tenantManager.GetDB(tenantID)
+	db, err := t.getDB(ctx, tenantID)
 	if err != nil {
 		return err
 	}
@@ -59,7 +60,7 @@ func (t *tenantMigrations) RollbackMigration(ctx context.Context, tenantID uuid.
 
 // RunAllMigrations implements TenantMigrations.
 func (t *tenantMigrations) RunAllMigrations(ctx context.Context, tenantID uuid.UUID) error {
-	db, err := t.tenantManager.GetDB(tenantID)
+	db, err := t.getDB(ctx, tenantID)
 	if err != nil {
 		return err
 	}
@@ -79,7 +80,7 @@ func (t *tenantMigrations) RunAllMigrations(ctx context.Context, tenantID uuid.U
 
 // RunMigration implements TenantMigrations.
 func (t *tenantMigrations) RunMigration(ctx context.Context, tenantID uuid.UUID, migrationID int64) error {
-	db, err := t.tenantManager.GetDB(tenantID)
+	db, err := t.getDB(ctx, tenantID)
 	if err != nil {
 		return err
 	}
@@ -111,6 +112,25 @@ func (t *tenantMigrations) RunAdminMigrations(ctx context.Context) error {
 	}
 
 	return nil
+}
+
+
+func (t *tenantMigrations) getDB(ctx context.Context, tenantID uuid.UUID) (*bun.DB, error) {
+	var db *bun.DB
+	if tenantID != uuid.Nil {
+		dbTenant, err := t.tenantManager.GetDB(tenantID)
+		if err != nil {
+			return nil, err
+		}
+		db = dbTenant
+	} else {
+		dbCtx, err := t.tenantManager.GetDBContext(ctx)
+		if err != nil {
+			return nil, err
+		}
+		db = dbCtx
+	}
+	return db, nil
 }
 
 func (t *tenantMigrations) up(ctx context.Context, db *sql.DB, embedMigrations embed.FS, folder string) error {

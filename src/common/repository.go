@@ -1,6 +1,7 @@
 package common
 
 import (
+	"api-test/src/common/filters"
 	"api-test/src/config"
 	"context"
 
@@ -36,7 +37,7 @@ type repository[Table any, ID any] struct {
 	config *config.Config
 	log Logger
 	tenant *TenantConnectionManager
-
+	queryBuilder filters.QueryBuilder
 }
 
 func (r *repository[Table, ID]) Create(ctx context.Context, item Table) (*Table, error) {
@@ -99,7 +100,7 @@ func (r *repository[Table, ID]) Delete(ctx context.Context, id ID) error {
 	return nil
 }
 
-func (r *repository[Table, ID]) Search(ctx context.Context, filters *QueryParams, relations ...string) ([]Table, error) {
+func (r *repository[Table, ID]) Search(ctx context.Context, filter *QueryParams, relations ...string) ([]Table, error) {
 	db, err := r.tenant.GetDBContext(ctx)
 	if err != nil {
 		return nil, err
@@ -111,8 +112,18 @@ func (r *repository[Table, ID]) Search(ctx context.Context, filters *QueryParams
 		q = q.Relation(relation)
 	}
 
-	if filters != nil {
-		q = q.Where(filters.String()) // TODO: Handle filters
+	if filter != nil && !filter.IsEmpty() {
+		q, err = r.queryBuilder.BuildQuery(q, &filters.FilterParams{
+			Filters: filter.Filter,
+			Sort:    filter.Sort,
+			Pagination: &filters.PaginationParams{
+				Page: filter.Page,
+				Size: filter.Size,
+			},
+		}, q.GetTableName())
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	err = q.Scan(ctx)

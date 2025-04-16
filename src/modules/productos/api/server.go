@@ -20,7 +20,7 @@ type ProductosAPI struct {
 
 func NewProductosAPI(log common.Logger, app fiber.Router, config *config.Config, tenant *common.TenantConnectionManager) *ProductosAPI {
 	repo := common.NewRepository[domain.ProductosTable, int64](config, log, tenant)
-	uc := usecase.NewProductosUseCase(repo)
+	uc := usecase.NewProductosUseCase(config, log, tenant, repo)
 	routes := NewProductosRoutes(log, uc, app)
 	return &ProductosAPI{
 		log:    log,

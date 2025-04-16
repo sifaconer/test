@@ -16,11 +16,13 @@ type AdminRoutes interface {
 type adminRoutes struct {
 	log            common.Logger
 	ucTenant       usecase.Tenant
+	ucTenantMigration usecase.TenantMigrations
 	ucAuth         usecase.Auth
 	config         *config.Config
 	app            fiber.Router
-	tenantHandlers handlers.TenantHandler
-	authHandlers   handlers.AuthHandler
+	tenantHandlers *handlers.TenantHandler
+	authHandlers   *handlers.AuthHandler
+	migrationsHandlers *handlers.MigrationsHandler
 }
 
 func (t *adminRoutes) RegisterRoutes() {
@@ -34,20 +36,24 @@ func (t *adminRoutes) RegisterRoutes() {
 	// Tenant
 	t.app.Get("/tenants", t.tenantHandlers.List)
 	t.app.Post("/tenants", t.tenantHandlers.Create)
-	t.app.Get("/tenants/:id", t.tenantHandlers.Get)
-	t.app.Put("/tenants/:id", t.tenantHandlers.Update)
-	t.app.Delete("/tenants/:id", t.tenantHandlers.Delete)
+
+	// Migrations
+	t.app.Post("/migrations/admin", t.migrationsHandlers.RunAdminMigrations)
+	t.app.Post("/migrations/tenant", t.migrationsHandlers.RunTenantMigrations)
 }
 
-func NewAdminRoutes(log common.Logger, app fiber.Router, ucTenant usecase.Tenant, ucAuth usecase.Auth, config *config.Config) AdminRoutes {
+func NewAdminRoutes(log common.Logger, app fiber.Router, ucTenant usecase.Tenant, ucTenantMigration usecase.TenantMigrations, ucAuth usecase.Auth, config *config.Config) AdminRoutes {
+	
 	return &adminRoutes{
 		log:            log,
 		ucTenant:       ucTenant,
+		ucTenantMigration: ucTenantMigration,
 		ucAuth:         ucAuth,
 		config:         config,
 		app:            app,
 		tenantHandlers: handlers.NewTenantHandler(log, ucTenant),
 		authHandlers:   handlers.NewAuthHandler(log, *config, ucAuth),
+		migrationsHandlers: handlers.NewMigrationsHandler(log, ucTenantMigration, *config),
 	}
 }
 
