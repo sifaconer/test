@@ -9,7 +9,7 @@ import (
 type ProductosHandler struct {
 	log common.Logger
 	uc  usecase.ProductosUseCase
-	*common.GenericHandler[domain.ProductosDTO, int64]
+	*common.GenericHandler[domain.CreateProductosDTO, domain.ResponseProductosDTO, domain.UpdateProductosDTO, int64]
 }
 
 

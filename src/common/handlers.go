@@ -9,16 +9,16 @@ import (
 )
 
 
-type GenericHandler[DTO any, ID any] struct {
+type GenericHandler[CreateDTO, ResponseDTO, UpdateDTO, ID any] struct {
 	Log    Logger
-	UseCase UseCase[DTO, ID]
+	UseCase UseCase[CreateDTO, ResponseDTO, UpdateDTO, ID]
 	ParseID func(string) (ID, error) 
 }
 
 
-func (h *GenericHandler[DTO, ID]) Create(c *fiber.Ctx) error {
+func (h *GenericHandler[CreateDTO, ResponseDTO, UpdateDTO, ID]) Create(c *fiber.Ctx) error {
 	// Decode
-	var dto DTO
+	var dto CreateDTO
 	if err := c.BodyParser(&dto); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(Response[any]{
 			Status:  "error",
@@ -66,7 +66,7 @@ func (h *GenericHandler[DTO, ID]) Create(c *fiber.Ctx) error {
 	})
 }
 
-func (h *GenericHandler[DTO, ID]) Get(c *fiber.Ctx) error {
+func (h *GenericHandler[CreateDTO, ResponseDTO, UpdateDTO, ID]) Get(c *fiber.Ctx) error {
 	// Decode
 	idParam := c.Params("id")
 	id, err := h.ParseID(idParam)
@@ -107,7 +107,7 @@ func (h *GenericHandler[DTO, ID]) Get(c *fiber.Ctx) error {
 	})
 }
 
-func (h *GenericHandler[DTO, ID]) Search(c *fiber.Ctx) error {
+func (h *GenericHandler[CreateDTO, ResponseDTO, UpdateDTO, ID]) Search(c *fiber.Ctx) error {
 	// Parse query parameters
 	filters := QueryParams{}
 	if err := c.QueryParser(&filters); err != nil {
@@ -147,7 +147,7 @@ func (h *GenericHandler[DTO, ID]) Search(c *fiber.Ctx) error {
 	})
 }
 
-func (h *GenericHandler[DTO, ID]) Update(c *fiber.Ctx) error {
+func (h *GenericHandler[CreateDTO, ResponseDTO, UpdateDTO, ID]) Update(c *fiber.Ctx) error {
 	// Decode ID
 	idParam := c.Params("id")
 	id, err := h.ParseID(idParam)
@@ -165,7 +165,7 @@ func (h *GenericHandler[DTO, ID]) Update(c *fiber.Ctx) error {
 	}
 
 	// Decode body
-	var dto DTO
+	var dto UpdateDTO
 	if err := c.BodyParser(&dto); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(Response[any]{
 			Status:  "error",
@@ -213,7 +213,7 @@ func (h *GenericHandler[DTO, ID]) Update(c *fiber.Ctx) error {
 	})
 }
 
-func (h *GenericHandler[DTO, ID]) Delete(c *fiber.Ctx) error {
+func (h *GenericHandler[CreateDTO, ResponseDTO, UpdateDTO, ID]) Delete(c *fiber.Ctx) error {
 	// Decode
 	idParam := c.Params("id")
 	id, err := h.ParseID(idParam)
@@ -296,8 +296,8 @@ func ParseUUID(idStr string) (any, error) {
 	return uuid.Parse(idStr)
 }
 
-func NewGenericHandler[DTO any, ID any](log Logger, useCase UseCase[DTO, ID]) *GenericHandler[DTO, ID] {
-	return &GenericHandler[DTO, ID]{
+func NewGenericHandler[CreateDTO, ResponseDTO, UpdateDTO, ID any](log Logger, useCase UseCase[CreateDTO, ResponseDTO, UpdateDTO, ID]) *GenericHandler[CreateDTO, ResponseDTO, UpdateDTO, ID] {
+	return &GenericHandler[CreateDTO, ResponseDTO, UpdateDTO, ID]{
 		Log:     log,
 		UseCase: useCase,
 		ParseID: ParseID[ID],

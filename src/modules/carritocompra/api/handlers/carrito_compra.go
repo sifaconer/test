@@ -9,12 +9,12 @@ import (
 type CarritoCompraHandler struct {
 	log common.Logger
 	uc  usecase.CarritoCompra
-	*common.GenericHandler[domain.DTOCarritoCompra, int64]
+	*common.GenericHandler[domain.CreateCarritoCompraDTO, domain.ResponseCarritoCompraDTO, domain.UpdateCarritoCompraDTO, int64]
 }
 
 
 func NewCarritoCompraHandler(log common.Logger, uc usecase.CarritoCompra) *CarritoCompraHandler {
-	handlers := common.NewGenericHandler(log, uc)
+	handlers := common.NewGenericHandler[domain.CreateCarritoCompraDTO, domain.ResponseCarritoCompraDTO, domain.UpdateCarritoCompraDTO, int64](log, uc)
 	return &CarritoCompraHandler{
 		log: log,
 		uc:  uc,
